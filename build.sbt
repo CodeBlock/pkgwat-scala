@@ -17,5 +17,6 @@ resolvers ++= Seq(
 )
 
 libraryDependencies   ++= Seq(
+  "net.databinder.dispatch" %% "dispatch-core" % "0.10.0",
   "net.liftweb" % "lift-json_2.10" % "2.5-M4"
 )
