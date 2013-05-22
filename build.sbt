@@ -14,9 +14,8 @@ licenses := Seq(
   "Apache v2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt"))
 
 resolvers ++= Seq(
-  "spray" at "http://repo.spray.io/"
 )
 
 libraryDependencies   ++= Seq(
-  "io.spray" %  "spray-json_2.10" % "1.2.4"
+  "net.liftweb" % "lift-json_2.10" % "2.5-M4"
 )
