@@ -89,10 +89,40 @@ class Pkgwat(baseURL: String) {
     * @param startRow The result row number to start at.
     * @param rowsPerPage How many rows should be returned at a time.
     */
-  def get(query: String, rowsPerPage: Int = 10, startRow: Int = 0): Option[Package] = {
-    val results = Await.result(search(query, rowsPerPage, startRow), 5.seconds)
-    val pkg = (results.rows.map(_.subPackages).flatten.filter(_.name == query) ++
-      results.rows.filter(_.name == query))
-    if (pkg.length == 1) Some(pkg.head) else None
+  def get(query: String, rowsPerPage: Int = 10, startRow: Int = 0) = {
+    val jsonURL = constructURL(
+      "xapian/query/search_packages",
+      Map(
+        "filters" -> Map("search" -> query),
+        "rows_per_page" -> rowsPerPage,
+        "start_row" -> startRow
+      )
+    )
+
+    for (result <- Http(url(jsonURL) OK as.String).either) yield {
+      result match {
+        case Right(content) => {
+          // Strip tags and slurp into lift-json's magic.
+          val json = parse(content.replaceAll("""<\/?.*?>""", ""))
+
+          // Transform so that we match our case classes above.
+          val results = json.transform {
+            case JField("upstream_url", x) => JField("upstreamURL", x)
+            case JField("sub_pkgs", x) => JField("subPackages", x)
+            case JField("devel_owner", x) => JField("develOwner", x)
+            case JField("visible_rows", x) => JField("visibleRows", x)
+            case JField("start_row", x) => JField("startRow", x)
+            case JField("rows_per_page", x) => JField("rowsPerPage", x)
+            case JField("total_rows", x) => JField("totalRows", x)
+          }.extract[SearchResults]
+
+          val pkg = (results.rows.map(_.subPackages).flatten.filter(_.name == query) ++
+            results.rows.filter(_.name == query))
+          if (pkg.length == 1) Some(pkg.head) else None
+
+        }
+        case Left(error) => throw error
+      }
+    }
   }
 }

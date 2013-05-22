@@ -23,21 +23,21 @@ class PkgwatSpec extends FunSpec with ParallelTestExecution {
 
   describe("The get method") {
     it("should work with subpackages") {
-      val p = pkgwat.get("gcc-go")
+      val p = Await.result(pkgwat.get("gcc-go"), 5.seconds)
       p should not be (None)
       p.get.name should equal("gcc-go")
       p.get.summary should equal("Go support")
     }
 
     it("should work with main packages") {
-      val p = pkgwat.get("gcc")
+      val p = Await.result(pkgwat.get("gcc"), 5.seconds)
       p should not be (None)
       p.get.name should equal("gcc")
       p.get.summary should equal("Various compilers (C, C++, Objective-C, Java, ...)")
     }
 
     it("should bail out gracefully on no results") {
-      val p = pkgwat.get("nonexistant-package-foo")
+      val p = Await.result(pkgwat.get("nonexistant-package-foo"), 5.seconds)
       p should be (None)
     }
   }
