@@ -68,7 +68,7 @@ response.replaceAll("""<\/?.*?>""", "")
 The **search** endpoint is: `xapian/query/search_packages` so an example request
 would be the properly URL-encoded form of this URL:
 
-https://apps.fedoraproject.org/packages/fcomm_connector/xapian/query/search_packages/{"filters": {"search": "chicken"}, "rows_per_page": 10, "start_row": 0}
+`https://apps.fedoraproject.org/packages/fcomm_connector/xapian/query/search_packages/{"filters": {"search": "chicken"}, "rows_per_page": 10, "start_row": 0}`
 
 Parameters, other than `rows_per_page` and `start_now`:
 
