@@ -20,4 +20,25 @@ class PkgwatSpec extends FunSpec with ParallelTestExecution {
       result.rows.head.subPackages.head.name should equal ("python3-httpie")
     }
   }
+
+  describe("The get method") {
+    it("should work with subpackages") {
+      val p = pkgwat.get("gcc-go")
+      p should not be (None)
+      p.get.name should equal("gcc-go")
+      p.get.summary should equal("Go support")
+    }
+
+    it("should work with main packages") {
+      val p = pkgwat.get("gcc")
+      p should not be (None)
+      p.get.name should equal("gcc")
+      p.get.summary should equal("Various compilers (C, C++, Objective-C, Java, ...)")
+    }
+
+    it("should bail out gracefully on no results") {
+      val p = pkgwat.get("nonexistant-package-foo")
+      p should be (None)
+    }
+  }
 }

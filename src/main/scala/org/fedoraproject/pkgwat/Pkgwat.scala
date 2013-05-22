@@ -78,4 +78,21 @@ class Pkgwat(baseURL: String) {
       }
     }
   }
+
+  /** Returns an [[Option[Package]]] after searching Fedora Packages for it.
+    *
+    * This method **blocks** for now, because we need to traverse the results
+    * to look for subpackages. However, we can traverse in the future, so we
+    * should probably prevent blocking at some point.
+    *
+    * @param query The package to search for.
+    * @param startRow The result row number to start at.
+    * @param rowsPerPage How many rows should be returned at a time.
+    */
+  def get(query: String, rowsPerPage: Int = 10, startRow: Int = 0): Option[Package] = {
+    val results = Await.result(search(query, rowsPerPage, startRow), 5.seconds)
+    val pkg = (results.rows.map(_.subPackages).flatten.filter(_.name == query) ++
+      results.rows.filter(_.name == query))
+    if (pkg.length == 1) Some(pkg.head) else None
+  }
 }
