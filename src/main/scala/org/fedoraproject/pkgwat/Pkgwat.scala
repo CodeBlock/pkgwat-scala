@@ -1,3 +1,5 @@
+package org.fedoraproject.pkgwat
+
 import net.liftweb.json._
 import net.liftweb.json.Serialization.{read, write}
 
