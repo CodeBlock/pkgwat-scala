@@ -27,7 +27,7 @@ case class SearchResults(
   startRow: Int,
   rows: List[Package])
 
-class Pkgwat(baseURL: String) {
+class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
   /** JSON Magic. */
   implicit val formats = DefaultFormats
 

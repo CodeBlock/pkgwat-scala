@@ -9,7 +9,7 @@ import scala.concurrent.duration._
 import org.fedoraproject.pkgwat._
 
 class PkgwatSpec extends FunSpec with ParallelTestExecution {
-  val pkgwat = new Pkgwat("https://apps.fedoraproject.org/packages")
+  val pkgwat = new Pkgwat
 
   describe("The search method") {
     it("should be able to search Fedora Packages") {
