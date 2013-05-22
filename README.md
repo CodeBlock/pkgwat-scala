@@ -1,6 +1,6 @@
 # pkgwat (scala)
 
-A port of [https://github.com/fedora-infra/pkgwat.api](pkgwat.api) to Scala.
+A port of [pkgwat.api](https://github.com/fedora-infra/pkgwat.api) to Scala.
 
 The API works similarly, but is slightly different in that rather than
 returning hashes, we return objects that contain the information.
