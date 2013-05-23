@@ -14,10 +14,11 @@ licenses := Seq(
   "Apache v2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt"))
 
 resolvers ++= Seq(
+  "spray" at "http://repo.spray.io/"
 )
 
 libraryDependencies   ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.10.0",
-  "net.liftweb" % "lift-json_2.10" % "2.5-M4",
+  "io.spray" %% "spray-json" % "1.2.4",
   "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
 )

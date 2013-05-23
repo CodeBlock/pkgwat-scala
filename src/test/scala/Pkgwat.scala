@@ -17,7 +17,8 @@ class PkgwatSpec extends FunSpec with ParallelTestExecution {
       result.totalRows should equal (result.rows.length)
       result.rows.head.summary should equal ("A Curl-like tool for humans")
       result.rows.head.name should equal ("httpie")
-      result.rows.head.subPackages.head.name should equal ("python3-httpie")
+      result.rows.head.subPackages should not be (None)
+      result.rows.head.subPackages.get.head.name should equal ("python3-httpie")
     }
   }
 
