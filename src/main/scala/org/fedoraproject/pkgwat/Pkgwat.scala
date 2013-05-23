@@ -127,7 +127,7 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
 
     for (result <- Http(url(jsonURL) OK as.String).either) yield {
       result match {
-        case Right(content) => JsonParser(content.replaceAll("""<\/?.*?>""", "")).convertTo[APIResults[Package]]
+        case Right(content) => JsonParser(content.replaceAll("""<\/?.*?>""", "")).convertTo[APIResults[Release]]
         case Left(error) => throw error
       }
     }
