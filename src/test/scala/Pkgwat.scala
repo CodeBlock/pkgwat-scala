@@ -42,4 +42,13 @@ class PkgwatSpec extends FunSpec with ParallelTestExecution {
       p should be (None)
     }
   }
+
+  describe("The releases method") {
+    it("should list all releases for a given package") {
+      val httpieReleases = Await.result(pkgwat.releases("httpie"), 5.seconds)
+      httpieReleases.rows.length should be > (4)
+      httpieReleases.rows.length should be < (10)
+      httpieReleases.rows.map(_.release) should contain ("Fedora EPEL 6")
+    }
+  }
 }
