@@ -72,4 +72,14 @@ would be the properly URL-encoded form of this URL:
 
 Parameters, other than `rows_per_page` and `start_now`:
 
-* `filters` - a map containing a `"search"` key-value pair, whose value is the search query.
+* `filters` - a map containing a `"search"` key-value pair, whose value is the
+  search query.
+
+##### Releases
+
+The **releases** endpoint is `bodhi/query/query_active_releases`.
+
+Parameters, other than `rows_per_page` and `start_now`:
+
+* `filters` - a map containing a `"package"` key-value pair, whose value is
+  the package whose releases are being looked up.
