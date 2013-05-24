@@ -51,14 +51,11 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
   /** Returns an encoded URL ready to pass to Dispatch. */
   private def constructURL(path: String, query: FilteredQuery): String = {
     val json = query.toJson.compactPrint
-    val f = Seq(
+    Seq(
       baseURL.replaceAll("/$", ""),
       "fcomm_connector",
       path,
       URLEncoder.encode(json, "utf8")).mkString("/")
-
-    println(f)
-    f
   }
 
   /** Returns a [[Future[APIResults]]] after searching for a package.
