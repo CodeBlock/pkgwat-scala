@@ -1,3 +1,5 @@
+import scalariform.formatter.preferences._
+
 name := "pkgwat-scala"
 
 organization := "org.fedoraproject"
@@ -22,3 +24,12 @@ libraryDependencies   ++= Seq(
   "io.spray" %% "spray-json" % "1.2.4",
   "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
 )
+
+defaultScalariformSettings ++ Seq(
+  ScalariformKeys.preferences := FormattingPreferences().
+    setPreference(PreserveDanglingCloseParenthesis, true).
+    setPreference(MultilineScaladocCommentsStartOnFirstLine, true).
+    setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
+)
+
+testOptions in Test += Tests.Argument("-oDS")
