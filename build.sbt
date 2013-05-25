@@ -22,7 +22,8 @@ resolvers ++= Seq(
 libraryDependencies   ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.10.0",
   "io.spray" %% "spray-json" % "1.2.4",
-  "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
+  "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test",
+  "org.slf4j" % "slf4j-simple" % "1.7.5" % "test"
 )
 
 defaultScalariformSettings ++ Seq(
