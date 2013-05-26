@@ -32,6 +32,23 @@ case class Release(
   stableVersion: String,
   testingVersion: String)
 
+case class Build(
+  buildID: Long,
+  completionTimestamp: Double,
+  creationEventID: Long,
+  creationTimesstamp: Double,
+  epoch: Option[Int],
+  name: String,
+  nvr: String,
+  ownerName: String,
+  packageName: String,
+  release: String,
+  stateString: String,
+  taskID: Long,
+  version: String,
+  volumeID: Long,
+  volumeName: String)
+
 class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
 
   case class FilteredQuery(rowsPerPage: Int, startRow: Int, filters: Map[String, String])
@@ -44,6 +61,9 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
     implicit val packageResultFormat = jsonFormat(APIResults[Package], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
 
     implicit val filteredQueryFormat = jsonFormat(FilteredQuery, "rows_per_page", "start_row", "filters")
+
+    implicit val buildFormat = jsonFormat(Build, "build_id", "completion_ts", "creation_event_id", "creation_ts", "epoch", "name", "nvr", "owner_name", "package_name", "release", "state_str", "task_id", "version", "volume_id", "volume_name")
+    implicit val buildResultFormat = jsonFormat(APIResults[Build], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
   }
 
   import MyJsonProtocol._
@@ -110,7 +130,7 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
 
   /** Returns a [[Future[Option[List[Release]]]]] after looking up package releases.
     *
-    * @param package The package to search for.
+    * @param pkg The package to search for.
     * @param startRow The result row number to start at.
     * @param rowsPerPage How many rows should be returned at a time.
     */
@@ -125,6 +145,39 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
     for (result <- Http(url(jsonURL) OK as.String).either) yield {
       result match {
         case Right(content) => JsonParser(content.replaceAll("""<\/?.*?>""", "")).convertTo[APIResults[Release]]
+        case Left(error) => throw error
+      }
+    }
+  }
+
+  /** Returns a [[Future[APIResults[Build]]]] after looking up builds.
+    *
+    * @param pkg The package to search for.
+    * @param state The build state to search for.
+    * @param startRow The result row number to start at.
+    * @param rowsPerPage How many rows should be returned at a time.
+    */
+  def builds(pkg: String, state: Option[String] = None, rowsPerPage: Int = 10, startRow: Int = 0) = {
+    val stateEnum = state match {
+      case Some("building") => "0"
+      case Some("success") => "1"
+      case Some("deleted") => "2"
+      case Some("failed") => "3"
+      case Some("cancelled") => "4"
+      case _ => ""
+    }
+    val jsonURL = constructURL(
+      "koji/query/query_builds",
+      FilteredQuery(
+        rowsPerPage,
+        startRow,
+        Map(
+          "package" -> pkg,
+          "state" -> stateEnum)))
+
+    for (result <- Http(url(jsonURL) OK as.String).either) yield {
+      result match {
+        case Right(content) => JsonParser(content.replaceAll("""<\/?.*?>""", "")).convertTo[APIResults[Build]]
         case Left(error) => throw error
       }
     }

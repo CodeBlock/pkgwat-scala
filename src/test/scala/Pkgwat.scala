@@ -51,4 +51,13 @@ class PkgwatSpec extends FunSpec with ParallelTestExecution {
       httpieReleases.rows.map(_.release) should contain ("Fedora EPEL 6")
     }
   }
+
+  describe("The builds method") {
+    it("should list all builds for a given package") {
+      val httpieBuilds = Await.result(pkgwat.builds("httpie"), 5.seconds)
+      httpieBuilds.rows.length should be > (4)
+      httpieBuilds.rows.length should be < (100)
+      httpieBuilds.rows.head.packageName should equal ("httpie")
+    }
+  }
 }
