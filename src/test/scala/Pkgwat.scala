@@ -60,4 +60,12 @@ class PkgwatSpec extends FunSpec with ParallelTestExecution {
       httpieBuilds.rows.head.packageName should equal ("httpie")
     }
   }
+
+  describe("The bugs method") {
+    it("should list bugs for a given package") {
+      val httpieBuilds = Await.result(pkgwat.bugs("firefox"), 5.seconds)
+      httpieBuilds.rows.length should be > (5)
+      httpieBuilds.rows.length should be < (500)
+    }
+  }
 }

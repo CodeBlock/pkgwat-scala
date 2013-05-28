@@ -49,21 +49,32 @@ case class Build(
   volumeID: Long,
   volumeName: String)
 
+case class Bug(
+  bugClass: String,
+  description: String,
+  id: Long,
+  lastModified: String,
+  release: String,
+  status: String)
+
 class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
 
   case class FilteredQuery(rowsPerPage: Int, startRow: Int, filters: Map[String, String])
 
   object MyJsonProtocol extends DefaultJsonProtocol {
+    implicit val filteredQueryFormat = jsonFormat(FilteredQuery, "rows_per_page", "start_row", "filters")
+
     implicit val releaseFormat = jsonFormat(Release, "release", "stable_version", "testing_version")
     implicit val releaseResultFormat = jsonFormat(APIResults[Release], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
 
     implicit val packageFormat: JsonFormat[Package] = lazyFormat(jsonFormat(Package, "icon", "description", "link", "sub_pkgs", "summary", "name", "upstream_url", "devel_owner"))
     implicit val packageResultFormat = jsonFormat(APIResults[Package], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
 
-    implicit val filteredQueryFormat = jsonFormat(FilteredQuery, "rows_per_page", "start_row", "filters")
-
     implicit val buildFormat = jsonFormat(Build, "build_id", "completion_ts", "creation_event_id", "creation_ts", "epoch", "name", "nvr", "owner_name", "package_name", "release", "state_str", "task_id", "version", "volume_id", "volume_name")
     implicit val buildResultFormat = jsonFormat(APIResults[Build], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
+
+    implicit val bugFormat = jsonFormat(Bug, "bug_class", "description", "id", "last_modified", "release", "status")
+    implicit val bugResultFormat = jsonFormat(APIResults[Bug], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
   }
 
   import MyJsonProtocol._
@@ -173,7 +184,8 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
         startRow,
         Map(
           "package" -> pkg,
-          "state" -> stateEnum)))
+          "state" -> stateEnum
+        )))
 
     for (result <- Http(url(jsonURL) OK as.String).either) yield {
       result match {
@@ -182,4 +194,41 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
       }
     }
   }
+
+  /** Returns a [[Future[APIResults[Bug]]]] after looking up package bugs.
+    *
+    * @param pkg The package to search for bugs for.
+    * @param version The package version to filter for.
+    * @param startRow The result row number to start at.
+    * @param rowsPerPage How many rows should be returned at a time.
+    */
+  def bugs(pkg: String, version: String = "all", rowsPerPage: Int = 10, startRow: Int = 0) = {
+    val versionEnum = version match {
+      case "el5" => "5"
+      case "el6" => "6"
+      case "f15" => "15"
+      case "f16" => "16"
+      case "f17" => "17"
+      case "f18" => "18"
+      case "f19" => "19"
+      case _ => ""
+    }
+    val jsonURL = constructURL(
+      "bugzilla/query/query_bugs",
+      FilteredQuery(
+        rowsPerPage,
+        startRow,
+        Map(
+          "package" -> pkg,
+          "version" -> versionEnum
+        )))
+
+    for (result <- Http(url(jsonURL) OK as.String).either) yield {
+      result match {
+        case Right(content) => JsonParser(content.replaceAll("""<\/?.*?>""", "")).convertTo[APIResults[Bug]]
+        case Left(error) => throw error
+      }
+    }
+  }
+
 }
