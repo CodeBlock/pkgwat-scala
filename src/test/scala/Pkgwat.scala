@@ -6,7 +6,7 @@ import org.scalatest.matchers.ShouldMatchers._
 import scala.concurrent._
 import scala.concurrent.duration._
 
-import org.fedoraproject.pkgwat._
+import me.elrod.pkgwat._
 
 class PkgwatSpec extends FunSpec with ParallelTestExecution {
   val pkgwat = new Pkgwat

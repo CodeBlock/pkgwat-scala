@@ -1,8 +1,8 @@
 import scalariform.formatter.preferences._
 
-name := "pkgwat-scala"
+name := "pkgwat"
 
-organization := "org.fedoraproject"
+organization := "me.elrod"
 
 version := "1.0.0"
 

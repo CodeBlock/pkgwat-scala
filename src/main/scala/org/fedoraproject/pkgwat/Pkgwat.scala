@@ -1,4 +1,4 @@
-package org.fedoraproject.pkgwat
+package me.elrod.pkgwat
 
 import spray.json._
 import DefaultJsonProtocol._
