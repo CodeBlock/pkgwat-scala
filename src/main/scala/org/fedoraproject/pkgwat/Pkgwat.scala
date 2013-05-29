@@ -34,15 +34,21 @@ case class Release(
 
 case class Build(
   buildID: Long,
+  completionTime: String, // TODO: DateTime this?
+  completionTimeDisplay: Map[String, String],
   completionTimestamp: Double,
   creationEventID: Long,
+  creationTime: String, //TODO: DateTime this?
   creationTimesstamp: Double,
   epoch: Option[Int],
   name: String,
   nvr: String,
+  ownerID: Long,
   ownerName: String,
+  packageID: Long,
   packageName: String,
   release: String,
+  state: Int,
   stateString: String,
   taskID: Long,
   version: String,
@@ -70,7 +76,7 @@ class Pkgwat(baseURL: String = "https://apps.fedoraproject.org/packages") {
     implicit val packageFormat: JsonFormat[Package] = lazyFormat(jsonFormat(Package, "icon", "description", "link", "sub_pkgs", "summary", "name", "upstream_url", "devel_owner"))
     implicit val packageResultFormat = jsonFormat(APIResults[Package], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
 
-    implicit val buildFormat = jsonFormat(Build, "build_id", "completion_ts", "creation_event_id", "creation_ts", "epoch", "name", "nvr", "owner_name", "package_name", "release", "state_str", "task_id", "version", "volume_id", "volume_name")
+    implicit val buildFormat = jsonFormat(Build, "build_id", "completion_time", "completion_time_display", "completion_ts", "creation_event_id", "creation_time", "creation_ts", "epoch", "name", "nvr", "owner_id", "owner_name", "package_id", "package_name", "release", "state", "state_str", "task_id", "version", "volume_id", "volume_name")
     implicit val buildResultFormat = jsonFormat(APIResults[Build], "visible_rows", "total_rows", "rows_per_page", "start_row", "rows")
 
     implicit val bugFormat = jsonFormat(Bug, "bug_class", "description", "id", "last_modified", "release", "status")
