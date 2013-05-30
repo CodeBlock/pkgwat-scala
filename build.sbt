@@ -4,7 +4,7 @@ name := "pkgwat"
 
 organization := "me.elrod"
 
-version := "1.0.0"
+version := "1.0.1"
 
 description := "A (rough) port of the pkgwat Fedora Packages API to Scala. "
 
@@ -25,7 +25,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies   ++= Seq(
-  "net.databinder.dispatch" %% "dispatch-core" % "0.10.0",
+  "net.databinder.dispatch" %% "dispatch-core" % "0.10.1",
   //"io.spray" %% "spray-json" % "1.2.4",
   "org.fedorapeople.codeblock" %% "spray-json" % "1.2.5-SNAPSHOT",
   "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test",
