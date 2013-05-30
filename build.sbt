@@ -4,7 +4,7 @@ name := "pkgwat"
 
 organization := "me.elrod"
 
-version := "1.0.0-SNAPSHOT"
+version := "1.0.0"
 
 description := "A (rough) port of the pkgwat Fedora Packages API to Scala. "
 
@@ -14,6 +14,10 @@ scalaVersion := "2.10.1"
 
 licenses := Seq(
   "Apache v2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt"))
+
+homepage := Some(url("https://github.com/CodeBlock/pkgwat-scala"))
+
+pomIncludeRepository := { _ => false }
 
 resolvers ++= Seq(
   //"spray" at "http://repo.spray.io/",
@@ -46,3 +50,28 @@ git.remoteRepo := "git@github.com:CodeBlock/pkgwat-scala.git"
 site.includeScaladoc()
 
 seq(ScctPlugin.instrumentSettings : _*)
+
+publishMavenStyle := true
+
+publishTo <<= version { (v: String) =>
+  val nexus = "https://oss.sonatype.org/"
+  if (v.trim.endsWith("SNAPSHOT"))
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+pomExtra := (
+  <scm>
+    <url>git@github.com:CodeBlock/pkgwat-scala.git</url>
+    <connection>scm:git:git@github.com:CodeBlock/pkgwat-scala.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>relrod</id>
+      <name>Ricky Elrod</name>
+      <url>http://elrod.me/</url>
+    </developer>
+  </developers>
+)
+
