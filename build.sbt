@@ -26,7 +26,6 @@ resolvers ++= Seq(
 libraryDependencies   ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.10.1",
   "io.spray" %% "spray-json" % "1.2.5",
-  "org.fedorapeople.codeblock" %% "spray-json" % "1.2.5-SNAPSHOT",
   "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test",
   "org.slf4j" % "slf4j-simple" % "1.7.5" % "test"
 )
