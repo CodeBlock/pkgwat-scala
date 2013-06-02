@@ -4,7 +4,7 @@ name := "pkgwat"
 
 organization := "me.elrod"
 
-version := "1.0.1"
+version := "1.0.2"
 
 description := "A (rough) port of the pkgwat Fedora Packages API to Scala. "
 
