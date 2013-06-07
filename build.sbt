@@ -10,7 +10,7 @@ description := "A (rough) port of the pkgwat Fedora Packages API to Scala. "
 
 scalacOptions := Seq("-deprecation", "-unchecked")
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.10.2"
 
 licenses := Seq(
   "Apache v2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt"))
